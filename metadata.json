@@ -1,0 +1,6 @@
+{
+  "name": "DocuMind - Gestão de Documentos Digitalizados",
+  "description": "Sistema de controle e gestão de documentos digitalizados com busca avançada, controle de permissões por usuário, OCR com IA (Gemini) e logs de auditoria.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
