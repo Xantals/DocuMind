@@ -98,7 +98,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   ];
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
       {/* Banner Welcome - Cleaner Light Layout */}
       <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-slate-50 p-6 text-slate-900 border border-blue-100/80 shadow-2xs dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:text-white dark:border-slate-800">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">

@@ -115,7 +115,7 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
   const canUpload = currentUser.role !== "viewer";
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
       {/* Top Action Bar & Folder Pills */}
       <div className="flex flex-col gap-4 lg:flex-row lg:items-center lg:justify-between">
         <div>

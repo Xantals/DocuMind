@@ -123,7 +123,7 @@ export const PermissionsView: React.FC<PermissionsViewProps> = ({
   };
 
   return (
-    <div className="space-y-6 p-6">
+    <div className="space-y-4 sm:space-y-6 p-3 sm:p-6">
       {/* Banner */}
       <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
         <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">

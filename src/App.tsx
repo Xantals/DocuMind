@@ -63,6 +63,7 @@ export default function App() {
   const [isUploadOpen, setIsUploadOpen] = useState(false);
   const [isFolderModalOpen, setIsFolderModalOpen] = useState(false);
   const [viewerDoc, setViewerDoc] = useState<DocumentItem | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Toast Notification
   const [toast, setToast] = useState<{ message: string; type: "info" | "success" | "warning" } | null>(null);
@@ -352,10 +353,12 @@ ${doc.ocrText}
         onSelectFolder={(fId) => setSelectedFolderId(fId)}
         totalStorageMb={totalStorageMb}
         totalDocumentsCount={documents.length}
+        isMobileOpen={isMobileMenuOpen}
+        onCloseMobile={() => setIsMobileMenuOpen(false)}
       />
 
       {/* Main Workspace */}
-      <div className="flex flex-1 flex-col overflow-hidden">
+      <div className="flex flex-1 flex-col overflow-hidden min-w-0">
         <Header
           currentUser={currentUser}
           allUsers={MOCK_USERS}
@@ -365,6 +368,7 @@ ${doc.ocrText}
           onQuickSearch={handleQuickSearch}
           activeTab={activeTab}
           firebaseUser={firebaseUser}
+          onToggleMobileMenu={() => setIsMobileMenuOpen((prev) => !prev)}
         />
 
         {/* Toast Notification Alert */}

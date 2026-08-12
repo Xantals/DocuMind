@@ -11,6 +11,7 @@ import {
   HardDrive,
   Database,
   Sparkles,
+  X,
 } from "lucide-react";
 import { Folder } from "../types";
 
@@ -22,6 +23,8 @@ interface SidebarProps {
   onSelectFolder: (folderId: string | null) => void;
   totalStorageMb: number;
   totalDocumentsCount: number;
+  isMobileOpen?: boolean;
+  onCloseMobile?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -32,6 +35,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onSelectFolder,
   totalStorageMb,
   totalDocumentsCount,
+  isMobileOpen = false,
+  onCloseMobile,
 }) => {
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, badge: null },
@@ -46,22 +51,34 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const storageCapacityMb = 10240;
   const storagePercentage = Math.min(100, (totalStorageMb / storageCapacityMb) * 100);
 
-  return (
-    <aside className="flex h-screen w-64 flex-col border-r border-slate-200/80 bg-white text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
+  const sidebarContent = (
+    <aside className="flex h-full w-full flex-col border-r border-slate-200/80 bg-white text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
       {/* Brand Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-slate-100 px-6 dark:border-slate-800">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20">
-          <FileText className="h-4.5 w-4.5" />
-        </div>
-        <div>
-          <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 text-base leading-tight">
-            <span>DocuMind</span>
-            <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold text-blue-600 border border-blue-200/60 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800">
-              GED v2.5
-            </span>
+      <div className="flex h-16 items-center justify-between border-b border-slate-100 px-6 dark:border-slate-800">
+        <div className="flex items-center gap-3">
+          <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20">
+            <FileText className="h-4.5 w-4.5" />
           </div>
-          <span className="text-[11px] text-slate-400">Digitalização & OCR IA</span>
+          <div>
+            <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 text-base leading-tight">
+              <span>DocuMind</span>
+              <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold text-blue-600 border border-blue-200/60 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800">
+                GED v2.5
+              </span>
+            </div>
+            <span className="text-[11px] text-slate-400">Digitalização & OCR IA</span>
+          </div>
         </div>
+
+        {onCloseMobile && (
+          <button
+            onClick={onCloseMobile}
+            className="rounded-lg p-1.5 text-slate-400 hover:bg-slate-100 hover:text-slate-700 md:hidden dark:hover:bg-slate-800 dark:hover:text-slate-200"
+            aria-label="Fechar menu"
+          >
+            <X className="h-5 w-5" />
+          </button>
+        )}
       </div>
 
       {/* Main Navigation */}
@@ -79,6 +96,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   key={item.id}
                   onClick={() => {
                     setActiveTab(item.id);
+                    if (onCloseMobile) onCloseMobile();
                   }}
                   className={`group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-semibold transition-all ${
                     isActive
@@ -115,6 +133,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => {
                 setActiveTab("documents");
                 onSelectFolder(null);
+                if (onCloseMobile) onCloseMobile();
               }}
               className="text-[10px] text-blue-600 font-semibold hover:underline dark:text-blue-400"
             >
@@ -126,6 +145,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               onClick={() => {
                 setActiveTab("documents");
                 onSelectFolder(null);
+                if (onCloseMobile) onCloseMobile();
               }}
               className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
                 activeTab === "documents" && selectedFolderId === null
@@ -145,6 +165,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   onClick={() => {
                     setActiveTab("documents");
                     onSelectFolder(fld.id);
+                    if (onCloseMobile) onCloseMobile();
                   }}
                   className={`flex w-full items-center justify-between rounded-lg px-3 py-1.5 text-xs transition-colors ${
                     isSelected
@@ -196,5 +217,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
         </div>
       </div>
     </aside>
+  );
+
+  return (
+    <>
+      {/* Desktop Fixed Sidebar */}
+      <div className="hidden md:flex h-screen w-64 flex-col shrink-0">
+        {sidebarContent}
+      </div>
+
+      {/* Mobile Drawer */}
+      {isMobileOpen && (
+        <div className="fixed inset-0 z-50 flex md:hidden">
+          <div
+            className="fixed inset-0 bg-slate-900/60 backdrop-blur-xs transition-opacity"
+            onClick={onCloseMobile}
+          />
+          <div className="relative flex w-72 max-w-[85vw] flex-1 flex-col z-10 shadow-2xl">
+            {sidebarContent}
+          </div>
+        </div>
+      )}
+    </>
   );
 };
