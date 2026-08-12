@@ -175,7 +175,7 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
   return (
     <div className="space-y-6 p-6">
       {/* Search Header */}
-      <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+      <div className="rounded-2xl border border-slate-200/80 bg-white p-6 shadow-2xs dark:border-slate-800 dark:bg-slate-900">
         <div className="flex items-center gap-2 mb-2">
           <SlidersHorizontal className="h-5 w-5 text-blue-600 dark:text-blue-400" />
           <h2 className="text-lg font-bold text-slate-900 dark:text-white">
@@ -188,13 +188,13 @@ export const AdvancedSearchView: React.FC<AdvancedSearchViewProps> = ({
 
         {/* Main Query Bar */}
         <div className="relative">
-          <Search className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-slate-400" />
+          <Search className="absolute left-4 top-1/2 h-4.5 w-4.5 -translate-y-1/2 text-slate-400" />
           <input
             type="text"
             placeholder="Digite palavras-chave, nomes de empresa, CNPJ, valores ou cláusulas do documento..."
             value={filters.query}
             onChange={(e) => setFilters((prev) => ({ ...prev, query: e.target.value }))}
-            className="w-full rounded-xl border border-slate-300 bg-slate-50 py-3 pl-12 pr-10 text-sm text-slate-900 shadow-inner focus:border-blue-500 focus:bg-white focus:outline-none dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-blue-400"
+            className="w-full rounded-xl border border-slate-200 bg-slate-50/60 py-2.5 pl-11 pr-10 text-sm text-slate-900 focus:border-blue-500 focus:bg-white focus:outline-none focus:ring-1 focus:ring-blue-500 dark:border-slate-700 dark:bg-slate-800 dark:text-white dark:focus:border-blue-400"
           />
           {filters.query && (
             <button

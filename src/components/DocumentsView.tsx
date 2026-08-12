@@ -188,8 +188,8 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
           onClick={() => onSelectFolder(null)}
           className={`shrink-0 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all ${
             selectedFolderId === null
-              ? "bg-slate-900 text-white shadow-sm dark:bg-blue-600"
-              : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+              ? "bg-blue-600 text-white shadow-2xs"
+              : "border border-slate-200/80 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
           }`}
         >
           📂 Todas as Pastas ({documents.length})
@@ -204,11 +204,11 @@ export const DocumentsView: React.FC<DocumentsViewProps> = ({
               onClick={() => onSelectFolder(f.id)}
               className={`flex shrink-0 items-center gap-2 rounded-xl px-3.5 py-2 text-xs font-semibold transition-all ${
                 isSelected
-                  ? "bg-blue-600 text-white shadow-sm"
-                  : "border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
+                  ? "bg-blue-600 text-white shadow-2xs"
+                  : "border border-slate-200/80 bg-white text-slate-700 hover:bg-slate-50 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
               }`}
             >
-              <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: f.color || "#3b82f6" }} />
+              <span className="h-2.5 w-2.5 rounded-full" style={{ backgroundColor: isSelected ? "#ffffff" : f.color || "#3b82f6" }} />
               <span>{f.name}</span>
               <span className={`rounded-full px-1.5 py-0.2 text-[10px] ${isSelected ? "bg-blue-700 text-white" : "bg-slate-100 text-slate-600 dark:bg-slate-800 dark:text-slate-400"}`}>
                 {count}

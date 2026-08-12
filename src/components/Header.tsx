@@ -9,8 +9,11 @@ import {
   FolderPlus,
   Sparkles,
   Lock,
+  LogIn,
+  LogOut,
 } from "lucide-react";
 import { User, UserRole } from "../types";
+import { loginWithGoogle, logoutUser } from "../lib/firebase";
 
 interface HeaderProps {
   currentUser: User;
@@ -20,6 +23,7 @@ interface HeaderProps {
   onOpenFolderModal: () => void;
   onQuickSearch: (query: string) => void;
   activeTab: string;
+  firebaseUser?: any;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -30,7 +34,23 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenFolderModal,
   onQuickSearch,
   activeTab,
+  firebaseUser,
 }) => {
+  const handleGoogleLogin = async () => {
+    try {
+      await loginWithGoogle();
+    } catch (err) {
+      console.error("Login failed:", err);
+    }
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch (err) {
+      console.error("Logout failed:", err);
+    }
+  };
   const getRoleBadge = (role: UserRole) => {
     switch (role) {
       case "admin":
@@ -147,6 +167,26 @@ export const Header: React.FC<HeaderProps> = ({
             ))}
           </select>
         </div>
+
+        {firebaseUser ? (
+          <button
+            onClick={handleLogout}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-red-200 bg-red-50 px-2.5 py-1.5 text-xs font-medium text-red-700 hover:bg-red-100 dark:border-red-900/50 dark:bg-red-950/40 dark:text-red-300"
+            title="Sair do Google Firebase"
+          >
+            <LogOut className="h-3.5 w-3.5" />
+            <span className="hidden xl:inline">Sair</span>
+          </button>
+        ) : (
+          <button
+            onClick={handleGoogleLogin}
+            className="inline-flex items-center gap-1.5 rounded-lg border border-slate-300 bg-white px-2.5 py-1.5 text-xs font-medium text-slate-700 hover:bg-slate-100 shadow-xs dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700"
+            title="Entrar com conta Google via Firebase Auth"
+          >
+            <LogIn className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
+            <span className="hidden xl:inline">Login Google</span>
+          </button>
+        )}
       </div>
     </header>
   );

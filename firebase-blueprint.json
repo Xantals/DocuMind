@@ -1,0 +1,106 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile and permission role",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "email": { "type": "string" },
+        "role": { "type": "string", "enum": ["admin", "manager", "operator", "viewer"] },
+        "department": { "type": "string" },
+        "avatar": { "type": "string" }
+      },
+      "required": ["id", "name", "email", "role"]
+    },
+    "Folder": {
+      "title": "Folder",
+      "description": "Folder container for documents",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "name": { "type": "string" },
+        "icon": { "type": "string" },
+        "color": { "type": "string" },
+        "description": { "type": "string" },
+        "parentId": { "type": "string" },
+        "allowedRoles": { "type": "array" },
+        "createdBy": { "type": "string" },
+        "createdAt": { "type": "string" },
+        "documentCount": { "type": "number" }
+      },
+      "required": ["id", "name", "color", "createdBy", "createdAt"]
+    },
+    "Document": {
+      "title": "Document",
+      "description": "Digitalized document metadata and OCR content",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "originalFileName": { "type": "string" },
+        "fileType": { "type": "string" },
+        "fileSize": { "type": "number" },
+        "folderId": { "type": "string" },
+        "folderName": { "type": "string" },
+        "subjects": { "type": "array" },
+        "uploadedBy": { "type": "object" },
+        "uploadedAt": { "type": "string" },
+        "documentDate": { "type": "string" },
+        "sensitivity": { "type": "string" },
+        "ocrStatus": { "type": "string" },
+        "ocrText": { "type": "string" },
+        "summary": { "type": "string" },
+        "confidenceScore": { "type": "number" },
+        "extractedEntities": { "type": "array" },
+        "fileUrl": { "type": "string" },
+        "previewThumbnail": { "type": "string" },
+        "version": { "type": "string" },
+        "allowedRoles": { "type": "array" },
+        "accessCount": { "type": "number" },
+        "downloadCount": { "type": "number" }
+      },
+      "required": ["id", "title", "folderId", "uploadedBy", "uploadedAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Audit log record of actions",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string" },
+        "timestamp": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "userRole": { "type": "string" },
+        "userEmail": { "type": "string" },
+        "action": { "type": "string" },
+        "documentId": { "type": "string" },
+        "documentTitle": { "type": "string" },
+        "details": { "type": "string" },
+        "ipAddress": { "type": "string" },
+        "device": { "type": "string" },
+        "severity": { "type": "string" }
+      },
+      "required": ["id", "timestamp", "userId", "userName", "action", "details"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profile collection"
+    },
+    "/folders/{folderId}": {
+      "schema": { "$ref": "#/entities/Folder" },
+      "description": "Folder collection"
+    },
+    "/documents/{documentId}": {
+      "schema": { "$ref": "#/entities/Document" },
+      "description": "Document collection"
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Audit log records"
+    }
+  }
+}

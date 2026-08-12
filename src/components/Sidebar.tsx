@@ -47,16 +47,16 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const storagePercentage = Math.min(100, (totalStorageMb / storageCapacityMb) * 100);
 
   return (
-    <aside className="flex h-screen w-64 flex-col border-r border-slate-200 bg-slate-900 text-slate-300 dark:border-slate-800">
+    <aside className="flex h-screen w-64 flex-col border-r border-slate-200/80 bg-white text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300">
       {/* Brand Logo */}
-      <div className="flex h-16 items-center gap-3 border-b border-slate-800 px-6">
-        <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-500 text-white shadow-lg shadow-blue-500/20">
-          <FileText className="h-5 w-5" />
+      <div className="flex h-16 items-center gap-3 border-b border-slate-100 px-6 dark:border-slate-800">
+        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-gradient-to-tr from-blue-600 to-indigo-600 text-white shadow-md shadow-blue-500/20">
+          <FileText className="h-4.5 w-4.5" />
         </div>
         <div>
-          <div className="flex items-center gap-1.5 font-bold text-slate-100 text-base leading-tight">
+          <div className="flex items-center gap-1.5 font-bold text-slate-900 dark:text-slate-100 text-base leading-tight">
             <span>DocuMind</span>
-            <span className="rounded bg-blue-500/20 px-1 py-0.2 text-[9px] font-bold text-blue-400 border border-blue-500/30">
+            <span className="rounded bg-blue-50 px-1.5 py-0.5 text-[9px] font-bold text-blue-600 border border-blue-200/60 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800">
               GED v2.5
             </span>
           </div>
@@ -67,7 +67,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
       {/* Main Navigation */}
       <div className="flex-1 overflow-y-auto px-3 py-4 space-y-6">
         <div>
-          <div className="mb-2 px-3 text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
+          <div className="mb-2 px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
             Menu Principal
           </div>
           <nav className="space-y-1">
@@ -79,26 +79,23 @@ export const Sidebar: React.FC<SidebarProps> = ({
                   key={item.id}
                   onClick={() => {
                     setActiveTab(item.id);
-                    if (item.id === "documents") {
-                      // reset folder filter if needed
-                    }
                   }}
-                  className={`group flex w-full items-center justify-between rounded-lg px-3 py-2.5 text-xs font-medium transition-all ${
+                  className={`group flex w-full items-center justify-between rounded-xl px-3 py-2.5 text-xs font-semibold transition-all ${
                     isActive
-                      ? "bg-blue-600 text-white shadow-sm shadow-blue-500/30"
-                      : "text-slate-300 hover:bg-slate-800 hover:text-slate-100"
+                      ? "bg-blue-600 text-white shadow-sm shadow-blue-500/20"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800 dark:hover:text-slate-100"
                   }`}
                 >
                   <div className="flex items-center gap-3">
-                    <Icon className={`h-4 w-4 ${isActive ? "text-white" : "text-slate-400 group-hover:text-slate-200"}`} />
+                    <Icon className={`h-4 w-4 ${isActive ? "text-white" : "text-slate-400 group-hover:text-slate-600 dark:group-hover:text-slate-300"}`} />
                     <span>{item.label}</span>
                   </div>
                   {item.badge && (
                     <span
-                      className={`rounded-full px-2 py-0.5 text-[10px] font-semibold ${
+                      className={`rounded-full px-2 py-0.5 text-[10px] font-bold ${
                         isActive
                           ? "bg-blue-700 text-blue-100"
-                          : "bg-slate-800 text-slate-400 group-hover:bg-slate-700 group-hover:text-slate-200"
+                          : "bg-slate-100 text-slate-500 group-hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-400"
                       }`}
                     >
                       {item.badge}
@@ -112,14 +109,14 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
         {/* Quick Folders Navigation */}
         <div>
-          <div className="mb-2 flex items-center justify-between px-3 text-[10px] font-semibold tracking-wider text-slate-400 uppercase">
+          <div className="mb-2 flex items-center justify-between px-3 text-[10px] font-bold tracking-wider text-slate-400 uppercase">
             <span>Pastas & Assuntos</span>
             <button
               onClick={() => {
                 setActiveTab("documents");
                 onSelectFolder(null);
               }}
-              className="text-[10px] text-blue-400 hover:underline"
+              className="text-[10px] text-blue-600 font-semibold hover:underline dark:text-blue-400"
             >
               Ver Todas
             </button>
@@ -130,10 +127,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 setActiveTab("documents");
                 onSelectFolder(null);
               }}
-              className={`flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-xs font-medium transition-colors ${
+              className={`flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-xs font-medium transition-colors ${
                 activeTab === "documents" && selectedFolderId === null
-                  ? "bg-slate-800 text-blue-400 font-semibold"
-                  : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                  ? "bg-blue-50 text-blue-700 font-semibold dark:bg-slate-800 dark:text-blue-400"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/60"
               }`}
             >
               <FolderIcon className="h-3.5 w-3.5 text-slate-400" />
@@ -149,10 +146,10 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     setActiveTab("documents");
                     onSelectFolder(fld.id);
                   }}
-                  className={`flex w-full items-center justify-between rounded-md px-3 py-1.5 text-xs transition-colors ${
+                  className={`flex w-full items-center justify-between rounded-lg px-3 py-1.5 text-xs transition-colors ${
                     isSelected
-                      ? "bg-slate-800 text-blue-400 font-semibold"
-                      : "text-slate-400 hover:bg-slate-800/60 hover:text-slate-200"
+                      ? "bg-blue-50 text-blue-700 font-semibold dark:bg-slate-800 dark:text-blue-400"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 dark:text-slate-400 dark:hover:bg-slate-800/60"
                   }`}
                 >
                   <div className="flex items-center gap-2.5 truncate">
@@ -163,7 +160,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <span className="truncate">{fld.name}</span>
                   </div>
                   {fld.documentCount !== undefined && fld.documentCount > 0 && (
-                    <span className="text-[10px] text-slate-500 font-mono">{fld.documentCount}</span>
+                    <span className="text-[10px] text-slate-400 font-mono">{fld.documentCount}</span>
                   )}
                 </button>
               );
@@ -173,27 +170,27 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </div>
 
       {/* Storage Footer */}
-      <div className="border-t border-slate-800 p-4">
-        <div className="rounded-xl bg-slate-800/80 p-3 text-xs border border-slate-700/60">
+      <div className="border-t border-slate-100 p-4 dark:border-slate-800">
+        <div className="rounded-xl bg-slate-50 p-3 text-xs border border-slate-200/70 dark:bg-slate-800/60 dark:border-slate-700/60">
           <div className="mb-1.5 flex items-center justify-between">
-            <div className="flex items-center gap-1.5 font-medium text-slate-200">
-              <HardDrive className="h-3.5 w-3.5 text-blue-400" />
+            <div className="flex items-center gap-1.5 font-semibold text-slate-700 dark:text-slate-200">
+              <HardDrive className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" />
               <span>Armazenamento</span>
             </div>
-            <span className="text-[10px] text-slate-400 font-mono">
+            <span className="text-[10px] text-slate-500 font-mono dark:text-slate-400">
               {totalStorageMb.toFixed(1)} MB / 10 GB
             </span>
           </div>
 
-          <div className="h-1.5 w-full rounded-full bg-slate-700 overflow-hidden">
+          <div className="h-1.5 w-full rounded-full bg-slate-200 overflow-hidden dark:bg-slate-700">
             <div
-              className="h-full rounded-full bg-gradient-to-r from-blue-500 to-indigo-400 transition-all duration-500"
+              className="h-full rounded-full bg-blue-600 transition-all duration-500"
               style={{ width: `${Math.max(2, storagePercentage)}%` }}
             />
           </div>
 
-          <div className="mt-2 flex items-center gap-1 text-[10px] text-slate-400">
-            <Sparkles className="h-3 w-3 text-amber-400 shrink-0" />
+          <div className="mt-2 flex items-center gap-1 text-[10px] text-slate-500 dark:text-slate-400">
+            <Sparkles className="h-3 w-3 text-amber-500 shrink-0" />
             <span>OCR Gemini indexado em tempo real</span>
           </div>
         </div>

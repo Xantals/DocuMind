@@ -28,30 +28,33 @@ import {
   AuditAction,
   AuditSeverity,
 } from "./types";
+import {
+  auth,
+  saveInitialDataIfEmpty,
+  subscribeToDocuments,
+  subscribeToFolders,
+  subscribeToAuditLogs,
+  saveDocumentToFirestore,
+  updateDocumentInFirestore,
+  deleteDocumentFromFirestore,
+  saveFolderToFirestore,
+  addAuditLogToFirestore,
+  testFirestoreConnection,
+} from "./lib/firebase";
+import { onAuthStateChanged, User as FirebaseUser } from "firebase/auth";
 
 export default function App() {
-  // Application State with LocalStorage Persistence fallback
   const [currentUser, setCurrentUser] = useState<User>(() => {
     const saved = localStorage.getItem("documind_user");
     return saved ? JSON.parse(saved) : MOCK_USERS[0];
   });
 
-  const [documents, setDocuments] = useState<DocumentItem[]>(() => {
-    const saved = localStorage.getItem("documind_documents");
-    return saved ? JSON.parse(saved) : INITIAL_DOCUMENTS;
-  });
+  const [firebaseUser, setFirebaseUser] = useState<FirebaseUser | null>(null);
 
-  const [folders, setFolders] = useState<Folder[]>(() => {
-    const saved = localStorage.getItem("documind_folders");
-    return saved ? JSON.parse(saved) : MOCK_FOLDERS;
-  });
-
+  const [documents, setDocuments] = useState<DocumentItem[]>(INITIAL_DOCUMENTS);
+  const [folders, setFolders] = useState<Folder[]>(MOCK_FOLDERS);
   const [subjects] = useState<Subject[]>(MOCK_SUBJECTS);
-
-  const [auditLogs, setAuditLogs] = useState<AuditLog[]>(() => {
-    const saved = localStorage.getItem("documind_audit_logs");
-    return saved ? JSON.parse(saved) : INITIAL_AUDIT_LOGS;
-  });
+  const [auditLogs, setAuditLogs] = useState<AuditLog[]>(INITIAL_AUDIT_LOGS);
 
   const [activeTab, setActiveTab] = useState<string>("dashboard");
   const [selectedFolderId, setSelectedFolderId] = useState<string | null>(null);
@@ -64,21 +67,51 @@ export default function App() {
   // Toast Notification
   const [toast, setToast] = useState<{ message: string; type: "info" | "success" | "warning" } | null>(null);
 
+  // Initialize Firestore and Listeners
+  useEffect(() => {
+    testFirestoreConnection();
+    saveInitialDataIfEmpty(INITIAL_DOCUMENTS, MOCK_FOLDERS, INITIAL_AUDIT_LOGS);
+
+    const unsubDocs = subscribeToDocuments((data) => {
+      if (data && data.length > 0) setDocuments(data);
+    });
+
+    const unsubFolders = subscribeToFolders((data) => {
+      if (data && data.length > 0) setFolders(data);
+    });
+
+    const unsubLogs = subscribeToAuditLogs((data) => {
+      if (data && data.length > 0) setAuditLogs(data);
+    });
+
+    const unsubAuth = onAuthStateChanged(auth, (fUser) => {
+      setFirebaseUser(fUser);
+      if (fUser) {
+        // Map firebase user to current user profile
+        const gUser: User = {
+          id: fUser.uid,
+          name: fUser.displayName || fUser.email?.split('@')[0] || "Usuário Google",
+          email: fUser.email || "usuario@google.com",
+          role: "admin", // Authenticated Google Admin
+          department: "Diretoria Executiva",
+          avatar: fUser.photoURL || "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80",
+        };
+        setCurrentUser(gUser);
+        showToast(`Conectado como ${gUser.name} via Firebase Google Auth!`, "success");
+      }
+    });
+
+    return () => {
+      unsubDocs();
+      unsubFolders();
+      unsubLogs();
+      unsubAuth();
+    };
+  }, []);
+
   useEffect(() => {
     localStorage.setItem("documind_user", JSON.stringify(currentUser));
   }, [currentUser]);
-
-  useEffect(() => {
-    localStorage.setItem("documind_documents", JSON.stringify(documents));
-  }, [documents]);
-
-  useEffect(() => {
-    localStorage.setItem("documind_folders", JSON.stringify(folders));
-  }, [folders]);
-
-  useEffect(() => {
-    localStorage.setItem("documind_audit_logs", JSON.stringify(auditLogs));
-  }, [auditLogs]);
 
   const showToast = (message: string, type: "info" | "success" | "warning" = "info") => {
     setToast({ message, type });
@@ -94,7 +127,7 @@ export default function App() {
     severity: AuditSeverity = "info"
   ) => {
     const newLog: AuditLog = {
-      id: `log-${Date.now()}`,
+      id: `log-${Date.now()}-${Math.random().toString(36).substr(2, 4)}`,
       timestamp: new Date().toISOString(),
       userId: currentUser.id,
       userName: currentUser.name,
@@ -110,6 +143,7 @@ export default function App() {
     };
 
     setAuditLogs((prev) => [newLog, ...prev]);
+    addAuditLogToFirestore(newLog);
   };
 
   // User Switch Handler
@@ -125,7 +159,9 @@ export default function App() {
   // Add Document
   const handleUploadSuccess = (newDoc: DocumentItem) => {
     setDocuments((prev) => [newDoc, ...prev]);
-    showToast(`Documento '${newDoc.title}' digitalizado e indexado com sucesso!`, "success");
+    saveDocumentToFirestore(newDoc);
+
+    showToast(`Documento '${newDoc.title}' digitalizado e indexado no Firestore!`, "success");
 
     logAuditEvent(
       "UPLOAD",
@@ -139,7 +175,9 @@ export default function App() {
   // Create Folder
   const handleCreateFolder = (newFolder: Folder) => {
     setFolders((prev) => [...prev, newFolder]);
-    showToast(`Pasta '${newFolder.name}' criada com sucesso!`, "success");
+    saveFolderToFirestore(newFolder);
+
+    showToast(`Pasta '${newFolder.name}' salva no Firestore!`, "success");
 
     logAuditEvent(
       "CREATE_FOLDER",
@@ -153,16 +191,25 @@ export default function App() {
   // Update Folder Roles
   const handleUpdateFolderRoles = (folderId: string, allowedRoles: UserRole[]) => {
     setFolders((prev) =>
-      prev.map((f) => (f.id === folderId ? { ...f, allowedRoles } : f))
+      prev.map((f) => {
+        if (f.id === folderId) {
+          const updated = { ...f, allowedRoles };
+          saveFolderToFirestore(updated);
+          return updated;
+        }
+        return f;
+      })
     );
   };
 
   // View Document Handler
   const handleViewDocument = (doc: DocumentItem) => {
     setViewerDoc(doc);
+    const newCount = doc.accessCount + 1;
     setDocuments((prev) =>
-      prev.map((d) => (d.id === doc.id ? { ...d, accessCount: d.accessCount + 1 } : d))
+      prev.map((d) => (d.id === doc.id ? { ...d, accessCount: newCount } : d))
     );
+    updateDocumentInFirestore(doc.id, { accessCount: newCount });
 
     logAuditEvent(
       "VIEW",
@@ -207,9 +254,11 @@ ${doc.ocrText}
     element.click();
     document.body.removeChild(element);
 
+    const newCount = doc.downloadCount + 1;
     setDocuments((prev) =>
-      prev.map((d) => (d.id === doc.id ? { ...d, downloadCount: d.downloadCount + 1 } : d))
+      prev.map((d) => (d.id === doc.id ? { ...d, downloadCount: newCount } : d))
     );
+    updateDocumentInFirestore(doc.id, { downloadCount: newCount });
 
     showToast(`Download de '${doc.title}' concluído!`, "success");
 
@@ -229,9 +278,11 @@ ${doc.ocrText}
       return;
     }
 
-    if (confirm(`Tem certeza que deseja excluir permanentemente o documento "${doc.title}"? Esta ação será gravada no log de auditoria.`)) {
+    if (confirm(`Tem certeza que deseja excluir permanentemente o documento "${doc.title}" do Firestore? Esta ação será gravada no log de auditoria.`)) {
       setDocuments((prev) => prev.filter((d) => d.id !== doc.id));
       if (viewerDoc?.id === doc.id) setViewerDoc(null);
+
+      deleteDocumentFromFirestore(doc.id);
 
       showToast(`Documento '${doc.title}' excluído.`, "warning");
 
@@ -257,6 +308,7 @@ ${doc.ocrText}
           : d
       )
     );
+    updateDocumentInFirestore(docId, { folderId: targetFolder.id, folderName: targetFolder.name });
 
     const doc = documents.find((d) => d.id === docId);
     showToast(`Documento movido para a pasta '${targetFolder.name}'`, "info");
@@ -275,7 +327,8 @@ ${doc.ocrText}
     setDocuments((prev) =>
       prev.map((d) => (d.id === docId ? { ...d, ...newOcrData } : d))
     );
-    showToast("Re-processamento OCR com Gemini concluído!", "success");
+    updateDocumentInFirestore(docId, newOcrData);
+    showToast("Re-processamento OCR com Gemini salvo no Firestore!", "success");
   };
 
   // Quick Search Jump
@@ -311,6 +364,7 @@ ${doc.ocrText}
           onOpenFolderModal={() => setIsFolderModalOpen(true)}
           onQuickSearch={handleQuickSearch}
           activeTab={activeTab}
+          firebaseUser={firebaseUser}
         />
 
         {/* Toast Notification Alert */}

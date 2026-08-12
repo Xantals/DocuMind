@@ -99,115 +99,117 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   return (
     <div className="space-y-6 p-6">
-      {/* Banner Welcome */}
-      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-slate-900 via-blue-950 to-indigo-900 p-6 text-white shadow-xl">
+      {/* Banner Welcome - Cleaner Light Layout */}
+      <div className="relative overflow-hidden rounded-2xl bg-gradient-to-r from-blue-50/90 via-indigo-50/60 to-slate-50 p-6 text-slate-900 border border-blue-100/80 shadow-2xs dark:from-slate-900 dark:via-blue-950 dark:to-indigo-950 dark:text-white dark:border-slate-800">
         <div className="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-4">
           <div>
-            <div className="flex items-center gap-2 mb-1">
-              <span className="inline-flex items-center gap-1 rounded-full bg-blue-500/20 px-2.5 py-0.5 text-xs font-semibold text-blue-300 border border-blue-400/30">
-                <Sparkles className="h-3.5 w-3.5 text-blue-400" /> OCR Inteligente Ativo
+            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
+              <span className="inline-flex items-center gap-1 rounded-full bg-blue-100/80 px-2.5 py-0.5 text-xs font-bold text-blue-800 border border-blue-200/60 dark:bg-blue-900/40 dark:text-blue-300 dark:border-blue-800">
+                <Sparkles className="h-3.5 w-3.5 text-blue-600 dark:text-blue-400" /> OCR Inteligente Ativo
               </span>
-              <span className="text-xs text-slate-300">| Perfil Atual: <strong className="text-white">{currentUser.name}</strong> ({currentUser.role})</span>
+              <span className="text-xs text-slate-500 dark:text-slate-400">
+                Perfil Simulado: <strong className="text-slate-800 dark:text-slate-200">{currentUser.name}</strong> ({currentUser.role})
+              </span>
             </div>
-            <h2 className="text-2xl font-bold tracking-tight text-white">
+            <h2 className="text-2xl font-bold tracking-tight text-slate-900 dark:text-white">
               Painel Geral do Repositório Digital
             </h2>
-            <p className="mt-1 text-xs text-slate-300 max-w-2xl">
+            <p className="mt-1 text-xs text-slate-600 dark:text-slate-300 max-w-2xl leading-relaxed">
               Gerencie seus documentos digitalizados com reconhecimento de texto OCR via Gemini, busca avançada, classificação por assunto e trilha de auditoria contínua.
             </p>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
+          <div className="flex items-center gap-2.5 shrink-0">
             <button
               onClick={onOpenUpload}
               disabled={currentUser.role === "viewer"}
-              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-lg shadow-blue-600/30 hover:bg-blue-500 transition-all disabled:opacity-40"
+              className="inline-flex items-center gap-2 rounded-xl bg-blue-600 px-4 py-2.5 text-xs font-semibold text-white shadow-sm hover:bg-blue-700 transition-all disabled:opacity-40"
             >
               <Zap className="h-4 w-4" />
               <span>Digitalizar Documento</span>
             </button>
             <button
               onClick={() => onNavigateToTab("search")}
-              className="inline-flex items-center gap-2 rounded-xl bg-white/10 px-4 py-2.5 text-xs font-semibold text-white backdrop-blur-md hover:bg-white/20 transition-all"
+              className="inline-flex items-center gap-1.5 rounded-xl border border-slate-300/80 bg-white px-3.5 py-2.5 text-xs font-semibold text-slate-700 hover:bg-slate-50 transition-all dark:border-slate-700 dark:bg-slate-800 dark:text-slate-200"
             >
               <span>Busca OCR</span>
-              <ArrowUpRight className="h-4 w-4" />
+              <ArrowUpRight className="h-3.5 w-3.5 text-slate-500" />
             </button>
           </div>
         </div>
       </div>
 
-      {/* Metrics Cards */}
+      {/* Metrics Cards - Clean White Cards */}
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-5">
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:shadow-xs transition-all dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Total de Documentos</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Total de Documentos</span>
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400">
               <FileText className="h-5 w-5" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-2">
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">{totalDocs}</span>
-            <span className="text-xs font-medium text-emerald-600 dark:text-emerald-400 flex items-center">
+            <span className="text-2xl font-extrabold text-slate-900 dark:text-white">{totalDocs}</span>
+            <span className="text-xs font-bold text-emerald-600 dark:text-emerald-400 flex items-center">
               <TrendingUp className="h-3 w-3 mr-0.5" /> +100%
             </span>
           </div>
-          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Digitalizados e indexados</p>
+          <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Digitalizados e indexados</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:shadow-xs transition-all dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Armazenamento</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Armazenamento</span>
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-emerald-50 text-emerald-600 dark:bg-emerald-900/30 dark:text-emerald-400">
               <HardDrive className="h-5 w-5" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">{totalSizeMb}</span>
-            <span className="text-xs text-slate-500 font-semibold">MB</span>
+            <span className="text-2xl font-extrabold text-slate-900 dark:text-white">{totalSizeMb}</span>
+            <span className="text-xs text-slate-500 font-bold">MB</span>
           </div>
-          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Capacidade total: 10 GB</p>
+          <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Capacidade total: 10 GB</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:shadow-xs transition-all dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Acurácia OCR IA</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Acurácia OCR IA</span>
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-indigo-50 text-indigo-600 dark:bg-indigo-900/30 dark:text-indigo-400">
               <CheckCircle2 className="h-5 w-5" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">{avgOcrScore}%</span>
+            <span className="text-2xl font-extrabold text-slate-900 dark:text-white">{avgOcrScore}%</span>
           </div>
-          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Com Gemini 3.6 Flash</p>
+          <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Com Gemini 3.6 Flash</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:shadow-xs transition-all dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Sigilo & Restritos</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Sigilo & Restritos</span>
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-amber-50 text-amber-600 dark:bg-amber-900/30 dark:text-amber-400">
               <Lock className="h-5 w-5" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">{sensitiveDocs}</span>
+            <span className="text-2xl font-extrabold text-slate-900 dark:text-white">{sensitiveDocs}</span>
             <span className="text-xs text-slate-500 font-normal">arquivos</span>
           </div>
-          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Controle por perfil de usuário</p>
+          <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Controle por perfil de usuário</p>
         </div>
 
-        <div className="rounded-2xl border border-slate-200 bg-white p-4 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-4 shadow-2xs hover:shadow-xs transition-all dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center justify-between">
-            <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Downloads Totais</span>
+            <span className="text-xs font-semibold text-slate-500 dark:text-slate-400">Downloads Totais</span>
             <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-purple-50 text-purple-600 dark:bg-purple-900/30 dark:text-purple-400">
               <Download className="h-5 w-5" />
             </div>
           </div>
           <div className="mt-2 flex items-baseline gap-1">
-            <span className="text-2xl font-bold text-slate-900 dark:text-white">{totalDownloads}</span>
+            <span className="text-2xl font-extrabold text-slate-900 dark:text-white">{totalDownloads}</span>
             <span className="text-xs text-slate-500 font-normal">acessos</span>
           </div>
-          <p className="mt-1 text-[11px] text-slate-500 dark:text-slate-400">Com registro de auditoria</p>
+          <p className="mt-1 text-[11px] text-slate-400 dark:text-slate-500">Com registro de auditoria</p>
         </div>
       </div>
 
@@ -310,7 +312,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* Audit Log Recent Stream & Folder Quick Grid */}
       <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
         {/* Quick Folders Cards */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900 lg:col-span-2">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs dark:border-slate-800 dark:bg-slate-900 lg:col-span-2">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <FolderOpen className="h-4 w-4 text-blue-600 dark:text-blue-400" />
@@ -334,7 +336,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <div
                   key={fld.id}
                   onClick={() => onNavigateToTab("documents", fld.id)}
-                  className="group cursor-pointer rounded-xl border border-slate-200 bg-slate-50/70 p-3.5 hover:border-blue-400 hover:bg-blue-50/40 transition-all dark:border-slate-700/80 dark:bg-slate-800/60 dark:hover:border-blue-500"
+                  className="group cursor-pointer rounded-xl border border-slate-200/70 bg-slate-50/50 p-3.5 hover:border-blue-400 hover:bg-blue-50/30 transition-all dark:border-slate-700/80 dark:bg-slate-800/60 dark:hover:border-blue-500"
                 >
                   <div className="flex items-center justify-between">
                     <div
@@ -343,7 +345,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     >
                       <FolderOpen className="h-4 w-4" />
                     </div>
-                    <span className="rounded-full bg-slate-200/70 px-2 py-0.5 text-[10px] font-bold text-slate-700 dark:bg-slate-700 dark:text-slate-300">
+                    <span className="rounded-full bg-slate-200/60 px-2 py-0.5 text-[10px] font-bold text-slate-700 dark:bg-slate-700 dark:text-slate-300">
                       {docCount} {docCount === 1 ? "doc" : "docs"}
                     </span>
                   </div>
@@ -360,7 +362,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Audit Stream */}
-        <div className="rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
+        <div className="rounded-2xl border border-slate-200/80 bg-white p-5 shadow-2xs dark:border-slate-800 dark:bg-slate-900">
           <div className="mb-4 flex items-center justify-between">
             <div className="flex items-center gap-2">
               <ShieldCheck className="h-4 w-4 text-emerald-600 dark:text-emerald-400" />
@@ -376,7 +378,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </button>
           </div>
 
-          <div className="space-y-3">
+          <div className="space-y-2.5">
             {auditLogs.slice(0, 5).map((log) => {
               const formattedTime = new Date(log.timestamp).toLocaleTimeString("pt-BR", {
                 hour: "2-digit",
@@ -386,7 +388,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               return (
                 <div
                   key={log.id}
-                  className="flex items-start gap-2.5 rounded-xl border border-slate-100 bg-slate-50/60 p-2.5 text-xs dark:border-slate-800 dark:bg-slate-800/40"
+                  className="flex items-start gap-2.5 rounded-xl border border-slate-100 bg-slate-50/50 p-2.5 text-xs dark:border-slate-800 dark:bg-slate-800/40"
                 >
                   <div className="mt-0.5 shrink-0">
                     <Clock className="h-3.5 w-3.5 text-slate-400" />
